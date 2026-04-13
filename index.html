@@ -6,6 +6,7 @@
 <title>TurtleTalk — A tiny turtle that helps kids talk, reflect, and grow</title>
 <link rel="icon" type="image/png" href="_assets/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
   :root {
     --sky: #9fd8f0;
@@ -824,9 +825,15 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && waitlistOverlay.classList.contains('is-open')) closeWaitlist();
   });
-  waitlistForm.addEventListener('submit', (e) => {
+  const supabase = window.supabase.createClient(
+    'https://urcfczrpapelqypawobw.supabase.co',
+    'sb_publishable_kKDnAEdg8oW_-4yofSbazA_FQ0uUxsl'
+  );
+  const waitlistSubmit = waitlistForm.querySelector('.waitlist-submit');
+
+  waitlistForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const value = waitlistEmail.value.trim();
+    const value = waitlistEmail.value.trim().toLowerCase();
     if (!value) {
       waitlistEmail.classList.add('has-error');
       waitlistMessage.textContent = 'Please enter your email address.';
@@ -841,6 +848,32 @@
       waitlistEmail.focus();
       return;
     }
+
+    waitlistEmail.classList.remove('has-error');
+    waitlistSubmit.disabled = true;
+    const originalLabel = waitlistSubmit.textContent;
+    waitlistSubmit.textContent = 'Adding you\u2026';
+    waitlistMessage.textContent = '';
+    waitlistMessage.className = 'waitlist-message';
+
+    const { error } = await supabase
+      .from('turtletalk_waitlist')
+      .insert({ email: value });
+
+    waitlistSubmit.disabled = false;
+    waitlistSubmit.textContent = originalLabel;
+
+    if (error) {
+      if (error.code === '23505') {
+        waitlistFormWrap.style.display = 'none';
+        waitlistSuccess.classList.add('is-visible');
+        return;
+      }
+      waitlistMessage.textContent = 'Something went wrong \u2014 please try again in a moment.';
+      waitlistMessage.className = 'waitlist-message is-error';
+      return;
+    }
+
     waitlistFormWrap.style.display = 'none';
     waitlistSuccess.classList.add('is-visible');
   });
