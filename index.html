@@ -480,8 +480,9 @@
   footer a:hover { border-bottom-color: var(--grass); }
 
   /* ---------- REVEAL ---------- */
-  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal { transition: opacity 0.7s ease, transform 0.7s ease; }
+  body.js-reveal .reveal { opacity: 0; transform: translateY(28px); }
+  body.js-reveal .reveal.in { opacity: 1; transform: translateY(0); }
 
   /* ---------- WAITLIST MODAL ---------- */
   .waitlist-overlay {
@@ -766,33 +767,34 @@
 </div>
 
 <script>
+  document.body.classList.add('js-reveal');
+  const revealEls = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  revealEls.forEach(el => observer.observe(el));
+  setTimeout(() => revealEls.forEach(el => el.classList.add('in')), 3000);
 
   const tammyVideo = document.getElementById('tammy-video');
   const muteBtn = document.getElementById('mute-btn');
-  const syncMuteBtn = () => muteBtn.classList.toggle('is-muted', tammyVideo.muted);
-
-  const fallbackToMutedLoop = () => {
-    tammyVideo.muted = true;
-    tammyVideo.loop = true;
+  if (tammyVideo && muteBtn) {
+    const syncMuteBtn = () => muteBtn.classList.toggle('is-muted', tammyVideo.muted);
+    const fallbackToMutedLoop = () => {
+      tammyVideo.muted = true;
+      tammyVideo.loop = true;
+      syncMuteBtn();
+      tammyVideo.play().catch(() => {});
+    };
+    tammyVideo.addEventListener('ended', fallbackToMutedLoop, { once: true });
+    tammyVideo.muted = false;
     syncMuteBtn();
-    tammyVideo.play().catch(() => {});
-  };
-
-  tammyVideo.addEventListener('ended', fallbackToMutedLoop, { once: true });
-
-  tammyVideo.muted = false;
-  syncMuteBtn();
-  tammyVideo.play().catch(fallbackToMutedLoop);
-
-  muteBtn.addEventListener('click', () => {
-    tammyVideo.muted = !tammyVideo.muted;
-    syncMuteBtn();
-    if (!tammyVideo.muted) tammyVideo.play().catch(() => {});
-  });
+    tammyVideo.play().catch(fallbackToMutedLoop);
+    muteBtn.addEventListener('click', () => {
+      tammyVideo.muted = !tammyVideo.muted;
+      syncMuteBtn();
+      if (!tammyVideo.muted) tammyVideo.play().catch(() => {});
+    });
+  }
 
   const waitlistOverlay = document.getElementById('waitlist-overlay');
   const waitlistTriggers = document.querySelectorAll('.js-waitlist-open');
