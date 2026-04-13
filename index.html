@@ -625,7 +625,7 @@
   <div class="container">
     <div class="meet-grid">
       <div class="meet-illustration reveal">
-        <video class="meet-video" id="tammy-video" src="_assets/media/Tammy.mp4" autoplay loop muted playsinline></video>
+        <video class="meet-video" id="tammy-video" src="_assets/media/Tammy.mp4" autoplay playsinline></video>
         <button class="mute-btn is-muted" id="mute-btn" aria-label="Toggle sound">
           <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 5 6 9H2v6h4l5 4z"/>
@@ -772,9 +772,24 @@
 
   const tammyVideo = document.getElementById('tammy-video');
   const muteBtn = document.getElementById('mute-btn');
+  const syncMuteBtn = () => muteBtn.classList.toggle('is-muted', tammyVideo.muted);
+
+  const fallbackToMutedLoop = () => {
+    tammyVideo.muted = true;
+    tammyVideo.loop = true;
+    syncMuteBtn();
+    tammyVideo.play().catch(() => {});
+  };
+
+  tammyVideo.addEventListener('ended', fallbackToMutedLoop, { once: true });
+
+  tammyVideo.muted = false;
+  syncMuteBtn();
+  tammyVideo.play().catch(fallbackToMutedLoop);
+
   muteBtn.addEventListener('click', () => {
     tammyVideo.muted = !tammyVideo.muted;
-    muteBtn.classList.toggle('is-muted', tammyVideo.muted);
+    syncMuteBtn();
     if (!tammyVideo.muted) tammyVideo.play().catch(() => {});
   });
 
