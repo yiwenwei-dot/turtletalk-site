@@ -613,7 +613,7 @@
       TurtleTalk is a gentle voice companion for kids ages 5–10. They chat with Tammy the sea turtle, reframe hard feelings, and bring home brave missions that turn into warm dinner-table conversations.
     </p>
     <div class="hero-cta-row">
-      <a class="btn btn-primary" href="#meet">Meet Tammy</a>
+      <button class="btn btn-primary js-waitlist-open" type="button">Join Waitlist</button>
       <a class="btn btn-ghost" href="#demo">Watch Demo</a>
     </div>
   </div>
@@ -734,7 +734,7 @@
     <p>TurtleTalk is early — we're inviting families to shape Tammy together. Come try the first version and help us grow a kinder little companion.</p>
     <div class="hero-cta-row">
       <a class="btn btn-primary" href="http://app.turtletalk.io/demo" target="_blank" rel="noopener">Try the Demo</a>
-      <button class="btn btn-ghost" type="button" id="waitlist-open">Join the Waitlist</button>
+      <button class="btn btn-ghost js-waitlist-open" type="button">Join the Waitlist</button>
     </div>
   </div>
 </section>
@@ -794,7 +794,7 @@
   });
 
   const waitlistOverlay = document.getElementById('waitlist-overlay');
-  const waitlistOpen = document.getElementById('waitlist-open');
+  const waitlistTriggers = document.querySelectorAll('.js-waitlist-open');
   const waitlistClose = document.getElementById('waitlist-close');
   const waitlistForm = document.getElementById('waitlist-form');
   const waitlistEmail = document.getElementById('waitlist-email');
@@ -816,7 +816,7 @@
   function closeWaitlist() {
     waitlistOverlay.classList.remove('is-open');
   }
-  waitlistOpen.addEventListener('click', openWaitlist);
+  waitlistTriggers.forEach(btn => btn.addEventListener('click', openWaitlist));
   waitlistClose.addEventListener('click', closeWaitlist);
   waitlistOverlay.addEventListener('click', (e) => {
     if (e.target === waitlistOverlay) closeWaitlist();
