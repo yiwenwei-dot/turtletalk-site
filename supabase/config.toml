@@ -1,0 +1,4 @@
+project_id = "urcfczrpapelqypawobw"
+
+[functions.notify-waitlist]
+verify_jwt = false
