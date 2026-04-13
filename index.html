@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TurtleTalk — A tiny turtle that helps kids talk, reflect, and grow</title>
+<link rel="icon" href="_assets/images/e53c4bd8da5e491d9ab09e7cf0daf874.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #9fd8f0;
+    --sky-light: #d7eef9;
+    --sky-deep: #5fb3d4;
+    --grass: #7cc47a;
+    --grass-light: #b7e0a3;
+    --grass-deep: #4f9a4c;
+    --sun: #ffd66b;
+    --sun-warm: #ffb454;
+    --sun-glow: #fff0c4;
+    --cream: #fff9ec;
+    --ink: #2a4d5c;
+    --ink-soft: #5b7d8a;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    font-size: 17px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 24px 80px;
+    overflow: hidden;
+    color: #fff;
+  }
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 40%, rgba(42,77,92,0.15) 0%, rgba(42,77,92,0.55) 100%),
+      linear-gradient(180deg, rgba(159,216,240,0.25) 0%, rgba(124,196,122,0.35) 100%);
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    margin-bottom: 24px;
+    color: #fff;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 6.5vw, 74px);
+    line-height: 1.08;
+    color: #fff;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 30px rgba(42,77,92,0.35);
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--sun-glow);
+  }
+  .hero-sub {
+    font-size: clamp(17px, 2vw, 21px);
+    max-width: 600px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 2px 18px rgba(42,77,92,0.4);
+  }
+  .hero-cta-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    border-radius: 999px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  .btn-primary {
+    background: var(--sun);
+    color: var(--ink);
+    box-shadow: 0 10px 30px rgba(255,180,84,0.5), 0 2px 0 rgba(0,0,0,0.05);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    background: var(--sun-warm);
+    box-shadow: 0 14px 36px rgba(255,180,84,0.6);
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.28);
+    transform: translateY(-2px);
+  }
+
+  /* Scroll hint */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: rgba(255,255,255,0.85);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ---------- SHARED SECTION ---------- */
+  section { padding: 100px 24px; position: relative; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--grass-deep);
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: clamp(32px, 4.4vw, 48px);
+    color: var(--ink);
+    margin-bottom: 18px;
+    line-height: 1.15;
+  }
+  .section-lead {
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 620px;
+    line-height: 1.65;
+  }
+  .section-head-center { text-align: center; }
+  .section-head-center .section-lead { margin: 0 auto; }
+
+  /* ---------- MEET SHELLY ---------- */
+  .meet {
+    background: linear-gradient(180deg, var(--sky-light) 0%, var(--cream) 100%);
+    padding-top: 120px;
+  }
+  .meet-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .meet-illustration {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(180deg, var(--sky) 0%, var(--sky-light) 55%, var(--grass-light) 100%);
+    border-radius: 32px;
+    box-shadow: 0 30px 80px rgba(95,179,212,0.28);
+    overflow: hidden;
+  }
+  .meet-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .mute-btn {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    z-index: 2;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px);
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(42,77,92,0.25);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .mute-btn:hover {
+    transform: scale(1.08);
+    background: #fff;
+  }
+  .mute-btn svg { width: 22px; height: 22px; }
+  .mute-btn .icon-unmuted { display: none; }
+  .mute-btn.is-muted .icon-muted { display: none; }
+  .mute-btn.is-muted .icon-unmuted { display: block; }
+  .sun {
+    position: absolute;
+    top: 12%;
+    right: 14%;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at 40% 40%, #fff5c8 0%, var(--sun) 55%, var(--sun-warm) 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255,214,107,0.7);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  .cloud {
+    position: absolute;
+    background: #fff;
+    border-radius: 999px;
+    opacity: 0.9;
+    filter: blur(0.3px);
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+  }
+  .cloud-1 { top: 18%; left: 8%; width: 80px; height: 22px; animation: float 8s ease-in-out infinite; }
+  .cloud-1::before { width: 34px; height: 34px; top: -14px; left: 14px; }
+  .cloud-1::after { width: 26px; height: 26px; top: -10px; right: 10px; }
+  .cloud-2 { top: 30%; right: 32%; width: 60px; height: 16px; animation: float 10s ease-in-out infinite 1s; }
+  .cloud-2::before { width: 26px; height: 26px; top: -10px; left: 10px; }
+  .cloud-2::after { width: 20px; height: 20px; top: -7px; right: 8px; }
+  @keyframes float {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+  }
+  .shelly {
+    position: relative;
+    width: 58%;
+    max-width: 260px;
+    animation: wobble 5s ease-in-out infinite;
+  }
+  @keyframes wobble {
+    0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+    50% { transform: translateY(-8px) rotate(1.5deg); }
+  }
+  .shelly svg { width: 100%; height: auto; display: block; }
+
+  .meet-text h2 { margin-bottom: 22px; }
+  .meet-text p { font-size: 18px; color: var(--ink-soft); margin-bottom: 18px; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how {
+    background: var(--cream);
+    text-align: center;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 64px;
+  }
+  .step {
+    background: #fff;
+    border-radius: 28px;
+    padding: 42px 30px 36px;
+    position: relative;
+    box-shadow: 0 14px 40px rgba(95,179,212,0.12);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    text-align: left;
+  }
+  .step:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 60px rgba(95,179,212,0.22);
+  }
+  .step-icon {
+    width: 72px; height: 72px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+    font-size: 36px;
+  }
+  .step:nth-child(1) .step-icon { background: var(--sky-light); }
+  .step:nth-child(2) .step-icon { background: #fff0c4; }
+  .step:nth-child(3) .step-icon { background: #e0f3d4; }
+  .step-num {
+    position: absolute;
+    top: 28px;
+    right: 30px;
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    font-weight: 500;
+    color: rgba(95,125,138,0.15);
+    font-style: italic;
+  }
+  .step h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+  .step p {
+    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  /* ---------- FEATURES ---------- */
+  .features {
+    background: linear-gradient(180deg, var(--cream) 0%, #e0f3d4 100%);
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 56px;
+  }
+  .feature {
+    background: #fff;
+    border-radius: 28px;
+    padding: 40px 36px;
+    box-shadow: 0 14px 40px rgba(79,154,76,0.12);
+    border: 1px solid rgba(124,196,122,0.2);
+  }
+  .feature-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .feature.for-kids .feature-tag { background: var(--sky-light); color: var(--sky-deep); }
+  .feature.for-parents .feature-tag { background: #fff0c4; color: #b37a1e; }
+  .feature h3 {
+    font-size: 26px;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .feature ul {
+    list-style: none;
+    padding: 0;
+  }
+  .feature li {
+    padding: 10px 0 10px 32px;
+    position: relative;
+    color: var(--ink-soft);
+    font-size: 16px;
+    border-bottom: 1px dashed rgba(91,125,138,0.15);
+  }
+  .feature li:last-child { border-bottom: none; }
+  .feature li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--grass-light);
+    box-shadow: inset 0 0 0 4px #fff, 0 0 0 2px var(--grass);
+  }
+  .feature li strong { color: var(--ink); font-weight: 700; }
+
+  /* ---------- DEMO ---------- */
+  .demo {
+    background: #e0f3d4;
+    text-align: center;
+    padding-bottom: 140px;
+  }
+  .demo-video {
+    margin-top: 56px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(79,154,76,0.25);
+    background: #000;
+    max-width: 880px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 8px solid #fff;
+  }
+  .demo-video video { width: 100%; display: block; }
+
+  /* ---------- CTA FOOTER ---------- */
+  .cta {
+    background: linear-gradient(135deg, var(--sky) 0%, var(--grass) 100%);
+    text-align: center;
+    color: #fff;
+    padding: 120px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before, .cta::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+  }
+  .cta::before { width: 300px; height: 300px; top: -120px; left: -80px; }
+  .cta::after { width: 220px; height: 220px; bottom: -80px; right: -60px; }
+  .cta .container { position: relative; z-index: 1; }
+  .cta h2 {
+    font-size: clamp(34px, 5vw, 52px);
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.15;
+  }
+  .cta p {
+    font-size: 19px;
+    color: rgba(255,255,255,0.95);
+    max-width: 560px;
+    margin: 0 auto 36px;
+  }
+
+  /* ---------- FOOT ---------- */
+  footer {
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--cream);
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  footer a {
+    color: var(--grass-deep);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(79,154,76,0.3);
+  }
+  footer a:hover { border-bottom-color: var(--grass); }
+
+  /* ---------- REVEAL ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* ---------- WAITLIST MODAL ---------- */
+  .waitlist-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(42, 77, 92, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .waitlist-overlay.is-open { display: flex; opacity: 1; }
+  .waitlist-modal {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 44px 36px 36px;
+    max-width: 440px;
+    width: 100%;
+    box-shadow: 0 24px 60px rgba(42, 77, 92, 0.25);
+    text-align: center;
+    position: relative;
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.25s ease;
+  }
+  .waitlist-overlay.is-open .waitlist-modal { transform: translateY(0) scale(1); }
+  .waitlist-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    line-height: 1;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+  }
+  .waitlist-close:hover { background: rgba(42,77,92,0.08); }
+  .waitlist-modal h3 {
+    font-size: 26px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .waitlist-modal p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+  .waitlist-form { display: flex; flex-direction: column; gap: 12px; }
+  .waitlist-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid rgba(95, 179, 212, 0.35);
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .waitlist-input:focus {
+    border-color: var(--sky-deep);
+    box-shadow: 0 0 0 4px rgba(95, 179, 212, 0.15);
+  }
+  .waitlist-input.has-error {
+    border-color: #e07b6b;
+    box-shadow: 0 0 0 4px rgba(224, 123, 107, 0.15);
+  }
+  .waitlist-submit {
+    background: linear-gradient(135deg, var(--grass) 0%, var(--grass-deep) 100%);
+    color: #fff;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .waitlist-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(79,154,76,0.3); }
+  .waitlist-message {
+    margin-top: 14px;
+    font-size: 14px;
+    min-height: 20px;
+    color: var(--ink-soft);
+  }
+  .waitlist-message.is-error { color: #c14a37; }
+  .waitlist-message.is-success { color: var(--grass-deep); font-weight: 700; }
+  .waitlist-success {
+    display: none;
+    text-align: center;
+  }
+  .waitlist-success.is-visible { display: block; }
+  .waitlist-success-emoji {
+    font-size: 44px;
+    margin-bottom: 10px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 860px) {
+    section { padding: 72px 20px; }
+    .meet-grid { grid-template-columns: 1fr; gap: 40px; }
+    .meet-illustration { max-width: 420px; margin: 0 auto; }
+    .steps { grid-template-columns: 1fr; gap: 20px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .hero { padding: 80px 20px 100px; }
+    .btn { padding: 13px 24px; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <video class="hero-video" src="_assets/media/TurtleTalk.mp4" autoplay loop muted playsinline></video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Meet Tammy · Your Child's Tiny Turtle Friend</span>
+    <h1>A tiny turtle that helps kids <em>talk, reflect,</em> and grow.</h1>
+    <p class="hero-sub">
+      TurtleTalk is a gentle voice companion for kids ages 5–10. They chat with Tammy the sea turtle, reframe hard feelings, and bring home brave missions that turn into warm dinner-table conversations.
+    </p>
+    <div class="hero-cta-row">
+      <a class="btn btn-primary" href="#meet">Meet Tammy</a>
+      <a class="btn btn-ghost" href="#demo">Watch Demo</a>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll ↓</div>
+</section>
+
+<!-- ============== MEET SHELLY ============== -->
+<section class="meet" id="meet">
+  <div class="container">
+    <div class="meet-grid">
+      <div class="meet-illustration reveal">
+        <video class="meet-video" id="tammy-video" src="_assets/media/Tammy.mp4" autoplay loop muted playsinline></video>
+        <button class="mute-btn is-muted" id="mute-btn" aria-label="Toggle sound">
+          <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 5 6 9H2v6h4l5 4z"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+          <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 5 6 9H2v6h4l5 4z"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+        </button>
+      </div>
+      <div class="meet-text reveal">
+        <span class="section-eyebrow">Meet Tammy</span>
+        <h2 class="section-title">A patient listener who never runs out of warmth.</h2>
+        <p>Tammy is the tiny sea turtle at the heart of TurtleTalk. When your child has something big to say, Tammy listens — really listens — and replies in a warm, kind voice.</p>
+        <p>No scripts. No screens. No judgment. Just a safe place for kids to talk through their feelings and come out feeling a little braver.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== HOW IT WORKS ============== -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="section-head-center reveal">
+      <span class="section-eyebrow">How It Works</span>
+      <h2 class="section-title">Three gentle steps, every day.</h2>
+      <p class="section-lead">TurtleTalk turns everyday moments into opportunities for connection. Here's how a typical day with Tammy unfolds.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-icon">💬</div>
+        <h3>Talk</h3>
+        <p>Your child taps the turtle, holds a conversation with Tammy about their day, their friends, their worries — anything on their mind.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-icon">🌱</div>
+        <h3>Reflect</h3>
+        <p>Tammy helps reframe hard moments with gentle questions and stories, turning big feelings into small brave missions for the week.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-icon">🌟</div>
+        <h3>Grow</h3>
+        <p>At dinner, parents get a soft prompt: "Ask about Mia today." A simple conversation starter that makes the whole family closer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FEATURES ============== -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-head-center reveal">
+      <span class="section-eyebrow">What's Inside</span>
+      <h2 class="section-title">Built for kids. Designed with parents.</h2>
+      <p class="section-lead">Every feature was shaped by interviews with parents, educators, and kids themselves — to make sure TurtleTalk is something you feel good about handing to your child.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature for-kids reveal">
+        <span class="feature-tag">For Kids</span>
+        <h3>A friend who always has time.</h3>
+        <ul>
+          <li><strong>Warm voice replies</strong> — Tammy speaks with a gentle, child-friendly voice, not a robot.</li>
+          <li><strong>Brave missions</strong> — small challenges like "say hi to someone new" to build courage, one step at a time.</li>
+          <li><strong>No scary screens</strong> — conversation-first, no flashing graphics or addictive loops.</li>
+          <li><strong>Kid-safe responses</strong> — every reply is shaped to be age-appropriate and emotionally gentle.</li>
+        </ul>
+      </div>
+      <div class="feature for-parents reveal">
+        <span class="feature-tag">For Parents</span>
+        <h3>A bridge back to the dinner table.</h3>
+        <ul>
+          <li><strong>Weekly reports</strong> — a gentle summary of what your child talked about and how they're feeling.</li>
+          <li><strong>Conversation starters</strong> — soft prompts that help you check in without interrogating.</li>
+          <li><strong>Book &amp; movie recommendations</strong> — Tammy suggests age-appropriate stories that echo what your child is feeling, making education simple and accessible for every family.</li>
+          <li><strong>Transparent by design</strong> — no black-box AI tutor; you can see what Tammy says and why.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== DEMO ============== -->
+<section class="demo" id="demo">
+  <div class="container">
+    <div class="section-head-center reveal">
+      <span class="section-eyebrow">See It In Action</span>
+      <h2 class="section-title">A peek at Tammy's world.</h2>
+      <p class="section-lead">A short walkthrough of the TurtleTalk experience — the voice, the missions, and the parent dashboard.</p>
+    </div>
+    <div class="demo-video reveal">
+      <video src="_assets/media/Demo.MP4" controls preload="metadata" playsinline></video>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CTA ============== -->
+<section class="cta">
+  <div class="container">
+    <h2>Give your child a tiny friend who listens.</h2>
+    <p>TurtleTalk is early — we're inviting families to shape Tammy together. Come try the first version and help us grow a kinder little companion.</p>
+    <div class="hero-cta-row">
+      <a class="btn btn-primary" href="http://app.turtletalk.io/demo" target="_blank" rel="noopener">Try the Demo</a>
+      <button class="btn btn-ghost" type="button" id="waitlist-open">Join the Waitlist</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>TurtleTalk · Made with warmth in SF · <a href="mailto:yiwenwei@turtletalk.io">yiwenwei@turtletalk.io</a></p>
+</footer>
+
+<!-- ============== WAITLIST MODAL ============== -->
+<div class="waitlist-overlay" id="waitlist-overlay" role="dialog" aria-modal="true" aria-labelledby="waitlist-title">
+  <div class="waitlist-modal">
+    <button class="waitlist-close" type="button" id="waitlist-close" aria-label="Close">&times;</button>
+    <div class="waitlist-form-wrap" id="waitlist-form-wrap">
+      <h3 id="waitlist-title">Join the waitlist</h3>
+      <p>Drop your email and we'll let you know when Tammy is ready for your family.</p>
+      <form class="waitlist-form" id="waitlist-form" novalidate>
+        <input class="waitlist-input" type="email" id="waitlist-email" placeholder="you@example.com" autocomplete="email" required />
+        <button class="waitlist-submit" type="submit">Count me in</button>
+      </form>
+      <div class="waitlist-message" id="waitlist-message" aria-live="polite"></div>
+    </div>
+    <div class="waitlist-success" id="waitlist-success">
+      <div class="waitlist-success-emoji">🐢💌</div>
+      <h3>You're on the list!</h3>
+      <p>We'll be in touch the moment Tammy is ready to meet your family.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const tammyVideo = document.getElementById('tammy-video');
+  const muteBtn = document.getElementById('mute-btn');
+  muteBtn.addEventListener('click', () => {
+    tammyVideo.muted = !tammyVideo.muted;
+    muteBtn.classList.toggle('is-muted', tammyVideo.muted);
+    if (!tammyVideo.muted) tammyVideo.play().catch(() => {});
+  });
+
+  const waitlistOverlay = document.getElementById('waitlist-overlay');
+  const waitlistOpen = document.getElementById('waitlist-open');
+  const waitlistClose = document.getElementById('waitlist-close');
+  const waitlistForm = document.getElementById('waitlist-form');
+  const waitlistEmail = document.getElementById('waitlist-email');
+  const waitlistMessage = document.getElementById('waitlist-message');
+  const waitlistFormWrap = document.getElementById('waitlist-form-wrap');
+  const waitlistSuccess = document.getElementById('waitlist-success');
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function openWaitlist() {
+    waitlistOverlay.classList.add('is-open');
+    waitlistFormWrap.style.display = '';
+    waitlistSuccess.classList.remove('is-visible');
+    waitlistMessage.textContent = '';
+    waitlistMessage.className = 'waitlist-message';
+    waitlistEmail.value = '';
+    waitlistEmail.classList.remove('has-error');
+    setTimeout(() => waitlistEmail.focus(), 80);
+  }
+  function closeWaitlist() {
+    waitlistOverlay.classList.remove('is-open');
+  }
+  waitlistOpen.addEventListener('click', openWaitlist);
+  waitlistClose.addEventListener('click', closeWaitlist);
+  waitlistOverlay.addEventListener('click', (e) => {
+    if (e.target === waitlistOverlay) closeWaitlist();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && waitlistOverlay.classList.contains('is-open')) closeWaitlist();
+  });
+  waitlistForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = waitlistEmail.value.trim();
+    if (!value) {
+      waitlistEmail.classList.add('has-error');
+      waitlistMessage.textContent = 'Please enter your email address.';
+      waitlistMessage.className = 'waitlist-message is-error';
+      waitlistEmail.focus();
+      return;
+    }
+    if (!EMAIL_RE.test(value)) {
+      waitlistEmail.classList.add('has-error');
+      waitlistMessage.textContent = 'That doesn\u2019t look like a valid email \u2014 please double-check.';
+      waitlistMessage.className = 'waitlist-message is-error';
+      waitlistEmail.focus();
+      return;
+    }
+    waitlistFormWrap.style.display = 'none';
+    waitlistSuccess.classList.add('is-visible');
+  });
+</script>
+
+</body>
+</html>
