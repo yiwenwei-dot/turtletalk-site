@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TurtleTalk — Pitch Deck</title>
+<link rel="icon" href="_assets/images/e53c4bd8da5e491d9ab09e7cf0daf874.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #9fd8f0;
+  --sky-light: #d7eef9;
+  --sky-deep: #5fb3d4;
+  --grass: #7cc47a;
+  --grass-light: #b7e0a3;
+  --grass-deep: #4f9a4c;
+  --sun: #ffd66b;
+  --sun-warm: #ffb454;
+  --sun-glow: #fff0c4;
+  --cream: #fff9ec;
+  --ink: #2a4d5c;
+  --ink-soft: #5b7d8a;
+  --white: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito', -apple-system, sans-serif;
+  color: var(--ink);
+  background: #1a1a2e;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.01em; }
+
+/* ===== Slide container ===== */
+.deck { position: relative; width: 100vw; height: 100vh; }
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 56px 64px 48px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+  overflow: hidden;
+}
+.slide.active { opacity: 1; pointer-events: auto; }
+
+/* Light slides */
+.slide--light { background: var(--cream); }
+
+/* Dark slides with video bg */
+.slide--dark { background: var(--ink); color: var(--white); }
+.slide--dark .video-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0; opacity: 0.35;
+}
+.slide--dark .video-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(42,77,92,0.7) 0%, rgba(42,77,92,0.85) 100%);
+  z-index: 1;
+}
+.slide--dark .slide-inner { position: relative; z-index: 2; }
+
+/* Slide inner */
+.slide-inner { display: flex; flex-direction: column; height: 100%; }
+
+/* ===== Typography ===== */
+.eyebrow {
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--sky-deep);
+  margin-bottom: 8px;
+}
+.slide--dark .eyebrow { color: var(--sky); }
+
+.slide-title {
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.slide-subtitle {
+  font-size: clamp(16px, 1.5vw, 20px);
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 800px;
+}
+.slide--dark .slide-subtitle { color: var(--sky); }
+
+/* ===== Cards & Grids ===== */
+.card-row { display: flex; gap: 24px; flex: 1; margin-top: 24px; }
+.card {
+  flex: 1;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.card--accent {
+  background: var(--ink);
+  color: var(--white);
+}
+.card--sky { background: var(--sky-light); }
+.card--warm { background: var(--sun-glow); }
+.card-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--sky-deep);
+  margin-bottom: 8px;
+}
+.card--accent .card-label { color: var(--sun-warm); }
+.card-big {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 700;
+  color: var(--sun-warm);
+  line-height: 1.1;
+}
+.card--accent .card-big { color: var(--white); }
+.card-body {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.card--accent .card-body { color: rgba(255,255,255,0.85); }
+
+/* Step circles */
+.step-circle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--sky-deep);
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px; font-weight: 700;
+  margin: 0 auto 12px;
+}
+.step-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.step-body {
+  font-size: 14px;
+  color: var(--ink-soft);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ===== Timeline row ===== */
+.timeline-row {
+  display: flex; gap: 20px; flex: 1; margin-top: 20px; position: relative;
+}
+.timeline-row::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 24px; right: 24px;
+  height: 3px;
+  background: var(--sky-light);
+  border-radius: 2px;
+}
+.timeline-item {
+  flex: 1;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 24px 20px;
+  position: relative;
+  z-index: 1;
+}
+.timeline-dot {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--sky-deep);
+  border: 3px solid var(--cream);
+  margin: 0 auto 16px;
+}
+.timeline-label {
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-bottom: 4px;
+}
+.timeline-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.timeline-list {
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.timeline-list li::before {
+  content: '•';
+  color: var(--sky-deep);
+  margin-right: 6px;
+}
+.timeline-kpi {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sky-deep);
+  text-align: center;
+  border-top: 1px solid var(--sky-light);
+}
+
+/* ===== Data table ===== */
+.data-grid { display: flex; gap: 32px; margin-top: 20px; flex: 1; }
+.data-col { flex: 1; }
+.data-header {
+  background: var(--sky-deep);
+  color: var(--white);
+  padding: 12px 16px;
+  border-radius: 10px 10px 0 0;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+.data-header--warm { background: var(--sun-warm); }
+.data-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(42,77,92,0.08);
+}
+.data-row:nth-child(even) { background: rgba(159,216,240,0.08); }
+.data-label { flex: 1; color: var(--ink); }
+.data-value {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sun-warm);
+  min-width: 70px;
+}
+.data-note { font-size: 11px; color: var(--ink-soft); flex: 1.2; text-align: right; }
+
+/* ===== Comparison table ===== */
+.comp-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+.comp-table th {
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid var(--sky-light);
+}
+.comp-table th:first-child { text-align: left; width: 30%; }
+.comp-table th.highlight { background: var(--sky-deep); color: var(--white); border-radius: 10px 10px 0 0; }
+.comp-table td { padding: 8px 14px; text-align: center; border-bottom: 1px solid rgba(42,77,92,0.08); }
+.comp-table td:first-child { text-align: left; font-weight: 600; }
+.comp-table .check { color: var(--grass); font-weight: 700; font-size: 18px; }
+.comp-table .cross { color: var(--sun-warm); font-weight: 700; font-size: 18px; }
+
+/* ===== Why-Now rows ===== */
+.why-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(42,77,92,0.1);
+}
+.why-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.why-tag--reg { background: var(--sky-light); color: var(--sky-deep); }
+.why-tag--mkt { background: var(--sun-glow); color: var(--sun-warm); }
+.why-tag--tech { background: var(--grass-light); color: var(--grass-deep); }
+.why-value {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(22px, 2.5vw, 30px);
+  font-weight: 700;
+  min-width: 200px;
+}
+.why-text { font-size: 14px; color: var(--ink-soft); line-height: 1.5; flex: 1; }
+
+/* ===== GTM columns ===== */
+.gtm-row { display: flex; gap: 20px; margin-top: 20px; flex: 1; }
+.gtm-card {
+  flex: 1;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.gtm-badge {
+  display: inline-block;
+  background: var(--sky-deep);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  align-self: flex-start;
+}
+.gtm-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.gtm-cac {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--sun-warm);
+  margin: 8px 0;
+}
+.gtm-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+
+/* ===== Pricing tiers ===== */
+.tier-row { display: flex; gap: 24px; margin-top: 20px; flex: 1; }
+.tier {
+  flex: 1;
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+}
+.tier--pro { background: var(--ink); color: var(--white); }
+.tier-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 22px; font-weight: 600;
+  margin-bottom: 4px;
+}
+.tier-audience { font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; }
+.tier--pro .tier-audience { color: var(--sky); }
+.tier-price {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 700;
+  color: var(--sky-deep);
+  margin-bottom: 14px;
+}
+.tier--pro .tier-price { color: var(--sun-warm); }
+.tier-features {
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.tier-features li::before {
+  content: '✓';
+  color: var(--grass);
+  margin-right: 8px;
+  font-weight: 700;
+}
+.tier--pro .tier-features li::before { color: var(--sun-warm); }
+
+/* ===== Team ===== */
+.team-grid { display: flex; gap: 32px; margin-top: 24px; flex: 1; }
+.team-left {
+  flex: 1;
+  background: var(--white);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.team-avatar {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: var(--sky-deep);
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 48px; font-weight: 700;
+  flex-shrink: 0;
+}
+.team-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 26px; font-weight: 600;
+}
+.team-role {
+  font-size: 14px; color: var(--sky-deep); font-weight: 600;
+  margin-bottom: 12px;
+}
+.team-creds {
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.team-creds li::before {
+  content: '→';
+  color: var(--sky-deep);
+  margin-right: 8px;
+}
+.team-right {
+  flex: 1;
+  background: var(--ink);
+  border-radius: 16px;
+  padding: 32px;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.team-quote {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--sun-warm);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.team-cite {
+  font-size: 12px;
+  color: var(--sky);
+  margin-bottom: 24px;
+}
+.team-why-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sun-warm);
+  margin-bottom: 10px;
+}
+.team-why-list {
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.85);
+}
+.team-why-list li::before {
+  content: '•';
+  color: var(--sun-warm);
+  margin-right: 8px;
+}
+
+/* ===== Use-of-funds (slide 14) ===== */
+.ask-grid { display: flex; gap: 32px; margin-top: 24px; flex: 1; }
+.ask-chart {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+.ask-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ask-bar-label {
+  width: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+.ask-bar {
+  height: 32px;
+  border-radius: 8px;
+  background: var(--sun-warm);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.ask-bar--team { width: 50%; }
+.ask-bar--mktg { width: 25%; }
+.ask-bar--comp { width: 10%; background: var(--sky-deep); color: var(--white); }
+.ask-bar--infra { width: 10%; background: var(--sky); color: var(--ink); }
+.ask-bar--buf { width: 5%; background: var(--grass); color: var(--white); font-size: 11px; }
+
+.ask-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ask-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  gap: 16px;
+}
+.ask-item { font-size: 14px; font-weight: 600; min-width: 110px; }
+.ask-amount {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--sun-warm);
+  min-width: 80px;
+}
+.ask-desc { font-size: 13px; color: var(--sky); flex: 1; }
+
+/* ===== Product lists ===== */
+.prod-list {
+  list-style: none;
+  font-size: 15px;
+  line-height: 2;
+}
+.prod-list li::before {
+  content: '✓';
+  color: var(--grass);
+  margin-right: 10px;
+  font-weight: 700;
+}
+.card--accent .prod-list li::before { color: var(--sun-warm); }
+
+/* ===== Footer ===== */
+.slide-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.slide--dark .slide-footer { color: rgba(255,255,255,0.4); }
+.slide-footer .brand {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+}
+
+/* ===== Nav controls ===== */
+.nav-hint {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  z-index: 100;
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--sun-warm);
+  z-index: 100;
+  transition: width 0.35s ease;
+}
+
+/* ===== Title slide special ===== */
+.title-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.title-turtle { font-size: 56px; margin-bottom: 16px; }
+.title-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.title-tag {
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--sky);
+  margin-bottom: 24px;
+}
+.title-meta {
+  font-size: 16px;
+  color: var(--sun-warm);
+  margin-bottom: 8px;
+}
+.title-founder {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ===== Ask slide ===== */
+.ask-center { text-align: center; margin-bottom: 8px; }
+.ask-big {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 700;
+}
+.ask-sub {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--sun-warm);
+  margin-top: 4px;
+}
+
+/* ===== Financial table ===== */
+.fin-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+.fin-table th {
+  padding: 8px 12px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--sky-light);
+}
+.fin-table th:first-child { text-align: left; }
+.fin-table td { padding: 8px 12px; text-align: right; border-bottom: 1px solid rgba(42,77,92,0.08); }
+.fin-table td:first-child { text-align: left; font-weight: 600; color: var(--ink); }
+.fin-table tr.highlight-row td {
+  font-weight: 700;
+  color: var(--ink);
+  border-top: 2px solid var(--sky-deep);
+}
+.flywheel-note {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--sky-deep);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="nav-hint" id="nav-hint">← → or click to navigate</div>
+
+<div class="deck" id="deck">
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<section class="slide slide--dark" data-slide="1">
+  <video class="video-bg" src="_assets/media/TurtleTalk.mp4" autoplay loop muted playsinline></video>
+  <div class="video-overlay"></div>
+  <div class="slide-inner">
+    <div class="title-center">
+      <div class="title-turtle">🐢</div>
+      <div class="title-name">TurtleTalk</div>
+      <div class="title-tag">The voice companion that helps kids 5–10 talk, reflect, and grow.</div>
+      <div class="title-meta">Seed Round · $2M · Q2 2026</div>
+      <div class="title-founder">Yiwen · Founder</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 2: PROBLEM ==================== -->
+<section class="slide slide--light" data-slide="2">
+  <div class="slide-inner">
+    <div class="eyebrow">The Problem</div>
+    <h2 class="slide-title">Kids have big feelings.<br>Parents can't always meet them in the moment.</h2>
+    <div class="card-row">
+      <div class="card card--sky">
+        <div class="card-label">For families</div>
+        <div class="card-big">1 in 5</div>
+        <div class="card-body">US kids ages 6–17 live with an anxiety or depression diagnosis.<br><br>Most big feelings arrive at 3pm, not 3am — when parents are still at work.</div>
+      </div>
+      <div class="card card--warm">
+        <div class="card-label">For the market</div>
+        <div class="card-big">0</div>
+        <div class="card-body"><strong>AI voice companions designed for kids 5–10.</strong><br><br>Replika, Character.AI, Nomi — all adult-targeted, all flagged non-compliant with kids' privacy law.</div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>2 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 3: SOLUTION ==================== -->
+<section class="slide slide--light" data-slide="3">
+  <div class="slide-inner">
+    <div class="eyebrow">The Solution</div>
+    <h2 class="slide-title">A tiny sea turtle. A giant daily ritual.</h2>
+    <p class="slide-subtitle">Meet Tammy — a voice companion who listens to kids and gently bridges them back to their family.</p>
+    <div class="card-row">
+      <div class="card" style="text-align:center;">
+        <div class="step-circle">01</div>
+        <div class="step-title">Talk</div>
+        <div class="step-body">Child taps the turtle and has a warm, voice-first conversation about their day, worries, or wins.</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="step-circle" style="background:var(--sun-warm);">02</div>
+        <div class="step-title">Reflect</div>
+        <div class="step-body">Tammy gently reframes hard moments and sends the child home with one small 'brave mission' for the week.</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="step-circle" style="background:var(--grass);">03</div>
+        <div class="step-title">Grow</div>
+        <div class="step-body">Parents get a dinner-time prompt ('Ask about Mia today') — turning a solo moment into a family one.</div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>3 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 4: WHY NOW ==================== -->
+<section class="slide slide--light" data-slide="4">
+  <div class="slide-inner">
+    <div class="eyebrow">Why Now</div>
+    <h2 class="slide-title">Three curves are crossing in 2026.</h2>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:4px;">
+      <div class="why-row">
+        <span class="why-tag why-tag--reg">Regulatory</span>
+        <span class="why-value">April 22, 2026</span>
+        <span class="why-text">COPPA's first real update in 12 years takes effect TODAY. Voiceprints are now regulated biometric data — every AI-with-a-mic competitor faces a rebuild. We're building compliant from day one.</span>
+      </div>
+      <div class="why-row">
+        <span class="why-tag why-tag--mkt">Market</span>
+        <span class="why-value">$3.6B → $10.3B</span>
+        <span class="why-text">Social & Emotional Learning market 2023 → 2028 (MarketsandMarkets). Parents and schools are already buying — but nothing uses voice AI for the under-10 segment.</span>
+      </div>
+      <div class="why-row">
+        <span class="why-tag why-tag--tech">Technology</span>
+        <span class="why-value">< 1.5s</span>
+        <span class="why-text">Voice AI latency dropped from 2–3s to under 1.5s in January 2026. A natural conversation with a 7-year-old is now technically possible for the first time.</span>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>4 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 5: MARKET SIZE ==================== -->
+<section class="slide slide--light" data-slide="5">
+  <div class="slide-inner">
+    <div class="eyebrow">Market Size</div>
+    <h2 class="slide-title">A category sized for a real company.</h2>
+    <div class="card-row">
+      <div class="card card--sky">
+        <div class="card-label" style="color:var(--sky-deep);">TAM</div>
+        <div class="card-big" style="color:var(--ink);">$10.3B</div>
+        <div class="card-label" style="margin-top:auto;">Total Addressable Market</div>
+        <div class="card-body">Global SEL market by 2028 (MarketsandMarkets, Jan 2026)</div>
+      </div>
+      <div class="card">
+        <div class="card-label" style="color:var(--sky-deep);">SAM</div>
+        <div class="card-big" style="color:var(--ink);font-size:clamp(32px,3.5vw,48px);">$4.1B</div>
+        <div class="card-label" style="margin-top:auto;color:var(--sky-deep);">Serviceable Available</div>
+        <div class="card-body">English-speaking developed markets — ~40% of TAM.</div>
+      </div>
+      <div class="card card--accent">
+        <div class="card-label">Our Y5 target</div>
+        <div style="font-size:12px;color:var(--sun-warm);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;">SOM</div>
+        <div class="card-big">$55M</div>
+        <div class="card-label" style="margin-top:auto;">ARR · 1.3% of SAM</div>
+        <div class="card-body">450K families × $108 ARPU<br>+ 10K therapists × $500<br>+ $5M school licenses</div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>5 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 6: PRODUCT ==================== -->
+<section class="slide slide--light" data-slide="6">
+  <div class="slide-inner">
+    <div class="eyebrow">Product</div>
+    <h2 class="slide-title">What we're building this round.</h2>
+    <div class="card-row">
+      <div class="card">
+        <div class="card-label" style="color:var(--sky-deep);">Live Today</div>
+        <ul class="prod-list">
+          <li>Warm voice companion (Tammy)</li>
+          <li>Daily brave-mission loop</li>
+          <li>Weekly parent reports</li>
+          <li>Dinner-time conversation prompts</li>
+          <li>Book & movie recommendations</li>
+        </ul>
+      </div>
+      <div class="card card--accent">
+        <div class="card-label">Shipping This Round</div>
+        <ul class="prod-list">
+          <li>Parent Trust Center (COPPA-2026 compliant)</li>
+          <li>Persistent Tammy memory across sessions</li>
+          <li>Family Journal (exportable)</li>
+          <li>Parent-to-parent referral mechanic</li>
+          <li>Therapist Dashboard (Therapist Pro tier)</li>
+          <li>Therapy-minutes Value Meter</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>6 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 7: BUSINESS MODEL ==================== -->
+<section class="slide slide--light" data-slide="7">
+  <div class="slide-inner">
+    <div class="eyebrow">Business Model</div>
+    <h2 class="slide-title">Three tiers. Two audiences. One subscription engine.</h2>
+    <div class="tier-row">
+      <div class="tier">
+        <div class="tier-name">Hatchling</div>
+        <div class="tier-audience">Trial families</div>
+        <div class="tier-price">Free</div>
+        <ul class="tier-features">
+          <li>10 conversations / month</li>
+          <li>1 child profile</li>
+          <li>Weekly snapshot report</li>
+        </ul>
+      </div>
+      <div class="tier" style="border:2px solid var(--sun-warm);">
+        <div class="tier-name">Pod Family</div>
+        <div class="tier-audience">Primary consumer tier</div>
+        <div class="tier-price" style="color:var(--sun-warm);">$12.99 / month</div>
+        <ul class="tier-features">
+          <li>Unlimited conversations</li>
+          <li>Up to 3 children</li>
+          <li>Full brave-mission library</li>
+          <li>Emotion-trend reports</li>
+          <li>Family Journal</li>
+        </ul>
+      </div>
+      <div class="tier tier--pro">
+        <div class="tier-name">Therapist Pro</div>
+        <div class="tier-audience">Child therapists (B2B2C)</div>
+        <div class="tier-price">$49 / clinician / mo</div>
+        <ul class="tier-features">
+          <li>Multi-client dashboard</li>
+          <li>Session-prep summaries</li>
+          <li>BAA + HIPAA-ready</li>
+          <li>Custom mission authoring</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>7 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 8: UNIT ECONOMICS ==================== -->
+<section class="slide slide--light" data-slide="8">
+  <div class="slide-inner">
+    <div class="eyebrow">Unit Economics</div>
+    <h2 class="slide-title">The math works.</h2>
+    <p class="slide-subtitle">Every assumption benchmarked to an industry source or course formula.</p>
+    <div class="data-grid">
+      <div class="data-col">
+        <div class="data-header">Family (Consumer)</div>
+        <div class="data-row"><span class="data-label">Annual ARPU</span><span class="data-value">$108</span><span class="data-note">$99/yr plan · 40% monthly mix</span></div>
+        <div class="data-row"><span class="data-label">Gross margin</span><span class="data-value">85%</span><span class="data-note">AI inference + infrastructure</span></div>
+        <div class="data-row"><span class="data-label">Monthly churn</span><span class="data-value">3%</span><span class="data-note">Conservative vs 3–5% category</span></div>
+        <div class="data-row"><span class="data-label">LTV</span><span class="data-value">$210</span><span class="data-note">Week 2 formula: $84 / (0.10+0.31)</span></div>
+        <div class="data-row"><span class="data-label">CAC</span><span class="data-value">$50</span><span class="data-note">Paid + referral blend, kids-app range</span></div>
+        <div class="data-row"><span class="data-label">LTV : CAC</span><span class="data-value">4.2 : 1</span><span class="data-note">Above 3:1 investor benchmark</span></div>
+      </div>
+      <div class="data-col">
+        <div class="data-header data-header--warm">Therapist (B2B)</div>
+        <div class="data-row"><span class="data-label">Annual ARPU</span><span class="data-value" style="color:var(--sky-deep);">$500</span><span class="data-note">$49/mo clinician plan</span></div>
+        <div class="data-row"><span class="data-label">Gross margin</span><span class="data-value" style="color:var(--sky-deep);">85%</span><span class="data-note">Same infra, lower support</span></div>
+        <div class="data-row"><span class="data-label">Monthly churn</span><span class="data-value" style="color:var(--sky-deep);">1.5%</span><span class="data-note">SMB SaaS benchmark</span></div>
+        <div class="data-row"><span class="data-label">LTV</span><span class="data-value" style="color:var(--sky-deep);">$2,800</span><span class="data-note">$425 / (0.10+0.18)</span></div>
+        <div class="data-row"><span class="data-label">CAC</span><span class="data-value" style="color:var(--sky-deep);">$500</span><span class="data-note">Content + conference + partner</span></div>
+        <div class="data-row"><span class="data-label">LTV : CAC</span><span class="data-value" style="color:var(--sky-deep);">5.6 : 1</span><span class="data-note">Strong B2B ratio</span></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>8 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 9: GO-TO-MARKET ==================== -->
+<section class="slide slide--light" data-slide="9">
+  <div class="slide-inner">
+    <div class="eyebrow">Go-to-Market</div>
+    <h2 class="slide-title">A flywheel, not a funnel.</h2>
+    <p class="slide-subtitle">Each channel reduces CAC for the next. Parents bring therapists. Therapists bring schools.</p>
+    <div class="gtm-row">
+      <div class="gtm-card">
+        <span class="gtm-badge">Y1</span>
+        <div class="gtm-title">Parent referral</div>
+        <div class="gtm-cac">$50 CAC</div>
+        <div class="gtm-desc">Dropbox-style: 1 free month for both referrer & referred. Highest-trust channel in kids' apps.</div>
+      </div>
+      <div class="gtm-card">
+        <span class="gtm-badge" style="background:var(--sun-warm);">Y2</span>
+        <div class="gtm-title">Content + community</div>
+        <div class="gtm-cac" style="color:var(--sky-deep);">$40 CAC</div>
+        <div class="gtm-desc">SEO, parenting blogs, Instagram. Viral loop self-sustaining.</div>
+      </div>
+      <div class="gtm-card">
+        <span class="gtm-badge" style="background:var(--ink);">Y2–3</span>
+        <div class="gtm-title">Therapist channel</div>
+        <div class="gtm-cac" style="color:var(--ink);">$500/clinician</div>
+        <div class="gtm-desc">Each therapist refers 5–10 families → blended family CAC drops to ~$75.</div>
+      </div>
+      <div class="gtm-card">
+        <span class="gtm-badge" style="background:var(--grass-deep);">Y3+</span>
+        <div class="gtm-title">School licenses</div>
+        <div class="gtm-cac" style="color:var(--grass-deep);">Enterprise</div>
+        <div class="gtm-desc">9-month sales cycle, multi-year contracts. Therapists become champions.</div>
+      </div>
+    </div>
+    <p class="flywheel-note">→ Each channel makes the next one cheaper. This is the compounding moat.</p>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>9 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 10: COMPETITION ==================== -->
+<section class="slide slide--light" data-slide="10">
+  <div class="slide-inner">
+    <div class="eyebrow">Competition</div>
+    <h2 class="slide-title">The only voice AI built for kids from day one.</h2>
+    <div style="flex:1;display:flex;align-items:center;">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="highlight">TurtleTalk</th>
+            <th>Replika / CharAI / Nomi</th>
+            <th>Moxie / Yoto (smart toys)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Designed for kids 5–10</td><td class="check">✓</td><td class="cross">✗ (adult / 13+)</td><td>Partial (device only)</td></tr>
+          <tr><td>Voice-first experience</td><td class="check">✓</td><td>✓ (paid tier)</td><td class="check">✓</td></tr>
+          <tr><td>COPPA-2026 compliant by design</td><td class="check">✓</td><td class="cross">✗ (flagged)</td><td>Hardware-dependent</td></tr>
+          <tr><td>Parent dashboard + dinner prompts</td><td class="check">✓</td><td class="cross">✗</td><td>Limited</td></tr>
+          <tr><td>Therapist-shareable reports</td><td>✓ (coming)</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+          <tr><td>Price point</td><td>$12.99 / mo</td><td>$19.99 / mo</td><td>$99–299 hardware</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>10 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 11: TRACTION & ROADMAP ==================== -->
+<section class="slide slide--light" data-slide="11">
+  <div class="slide-inner">
+    <div class="eyebrow">Traction & Roadmap</div>
+    <h2 class="slide-title">120 days. Four shipped milestones.</h2>
+    <div class="timeline-row">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-label">Days 0–30</div>
+        <div class="timeline-title">Trust + Price</div>
+        <ul class="timeline-list">
+          <li>Parent Trust Center live</li>
+          <li>Pod Family tier at $12.99</li>
+          <li>Therapist Pro waitlist</li>
+        </ul>
+        <div class="timeline-kpi">1K waitlist → 300 paid</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--sun-warm);"></div>
+        <div class="timeline-label">Days 30–60</div>
+        <div class="timeline-title">Sticky Core</div>
+        <ul class="timeline-list">
+          <li>Persistent Tammy memory</li>
+          <li>Family Journal (exportable)</li>
+        </ul>
+        <div class="timeline-kpi">30-day retention > 60%</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--grass);"></div>
+        <div class="timeline-label">Days 60–90</div>
+        <div class="timeline-title">Growth Loop</div>
+        <ul class="timeline-list">
+          <li>Parent-to-parent referral</li>
+          <li>Emotion-trend chart</li>
+          <li>1-click therapist PDF</li>
+        </ul>
+        <div class="timeline-kpi">Viral coefficient K > 0.3</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--ink);"></div>
+        <div class="timeline-label">Days 90–120</div>
+        <div class="timeline-title">Platform Unlock</div>
+        <ul class="timeline-list">
+          <li>Therapist Dashboard live</li>
+          <li>Value Meter in parent app</li>
+        </ul>
+        <div class="timeline-kpi">100 paying therapists</div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>11 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 12: TEAM ==================== -->
+<section class="slide slide--light" data-slide="12">
+  <div class="slide-inner">
+    <div class="eyebrow">Team</div>
+    <h2 class="slide-title">Why this founder builds this product.</h2>
+    <div class="team-grid">
+      <div class="team-left">
+        <div class="team-avatar">Y</div>
+        <div>
+          <div class="team-name">Yiwen</div>
+          <div class="team-role">Founder & CEO</div>
+          <ul class="team-creds">
+            <li>MSSM, CMU Silicon Valley</li>
+            <li>8+ yrs CS teacher, grades 3–8</li>
+            <li>2× hackathon winner (AIoT, Google DeepMind)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="team-right">
+        <div class="team-quote">"The jockey matters more than the horse."</div>
+        <div class="team-cite">— VCs weight founder/team in 95% of decisions (Gompers, HBR 2021)</div>
+        <div class="team-why-label">Why me, why this:</div>
+        <ul class="team-why-list">
+          <li>I spent 8 years watching how 7-year-olds actually talk about feelings.</li>
+          <li>I've shipped AI products at hackathon pace (voice-powered Socratic companion 'Call Socrates').</li>
+          <li>CMU MSSM gave me the software-management backbone to turn that empathy into a company.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>12 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 13: FINANCIAL PROJECTIONS ==================== -->
+<section class="slide slide--light" data-slide="13">
+  <div class="slide-inner">
+    <div class="eyebrow">Financial Projections</div>
+    <h2 class="slide-title">5-year path to $55M ARR.</h2>
+    <p class="slide-subtitle">Breakeven in Y3. 33% operating margin by Y5 — in line with mature SaaS benchmarks.</p>
+    <div style="flex:1;display:flex;align-items:center;">
+      <table class="fin-table">
+        <thead>
+          <tr><th></th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Paying families</td><td>3,000</td><td>20,000</td><td>80,000</td><td>220,000</td><td>450,000</td></tr>
+          <tr><td>Paying therapists</td><td>50</td><td>500</td><td>2,000</td><td>5,000</td><td>10,000</td></tr>
+          <tr><td>Family ARR</td><td>$324K</td><td>$2.2M</td><td>$8.6M</td><td>$23.8M</td><td>$48.6M</td></tr>
+          <tr><td>Therapist ARR</td><td>$25K</td><td>$250K</td><td>$1.0M</td><td>$2.5M</td><td>$5.0M</td></tr>
+          <tr><td>School licenses</td><td>—</td><td>—</td><td>$200K</td><td>$1.5M</td><td>$5.0M</td></tr>
+          <tr class="highlight-row"><td>Total ARR</td><td>$349K</td><td>$2.4M</td><td>$9.8M</td><td>$27.8M</td><td>$55M</td></tr>
+          <tr><td>Gross margin</td><td>80%</td><td>83%</td><td>85%</td><td>85%</td><td>85%</td></tr>
+          <tr><td>Operating margin</td><td>-180%</td><td>-40%</td><td>5%</td><td>22%</td><td>33%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>13 / 14</span></div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 14: THE ASK ==================== -->
+<section class="slide slide--dark" data-slide="14">
+  <video class="video-bg" src="_assets/media/TurtleTalk.mp4" autoplay loop muted playsinline></video>
+  <div class="video-overlay"></div>
+  <div class="slide-inner">
+    <div class="ask-center">
+      <div class="eyebrow" style="color:var(--sun-warm);">The Ask</div>
+      <div class="ask-big">$2M seed.</div>
+      <div class="ask-sub">18 months runway → Series A at $2M ARR.</div>
+    </div>
+    <div class="ask-grid">
+      <div class="ask-chart">
+        <div class="ask-bar-row"><span class="ask-bar-label">Team</span><div class="ask-bar ask-bar--team">$1.0M</div></div>
+        <div class="ask-bar-row"><span class="ask-bar-label">Marketing</span><div class="ask-bar ask-bar--mktg">$500K</div></div>
+        <div class="ask-bar-row"><span class="ask-bar-label">Compliance</span><div class="ask-bar ask-bar--comp">$200K</div></div>
+        <div class="ask-bar-row"><span class="ask-bar-label">Infrastructure</span><div class="ask-bar ask-bar--infra">$200K</div></div>
+        <div class="ask-bar-row"><span class="ask-bar-label">Buffer</span><div class="ask-bar ask-bar--buf">$100K</div></div>
+      </div>
+      <div class="ask-detail">
+        <div class="ask-row"><span class="ask-item">Team</span><span class="ask-amount">$1.0M</span><span class="ask-desc">6 FTEs to execute 120-day roadmap</span></div>
+        <div class="ask-row"><span class="ask-item">Marketing</span><span class="ask-amount">$500K</span><span class="ask-desc">CAC × 10K families / 100 therapists</span></div>
+        <div class="ask-row"><span class="ask-item">Compliance</span><span class="ask-amount">$200K</span><span class="ask-desc">COPPA Safe Harbor + KidSAFE + BAA</span></div>
+        <div class="ask-row"><span class="ask-item">Infrastructure</span><span class="ask-amount">$200K</span><span class="ask-desc">AI voice inference + cloud</span></div>
+        <div class="ask-row"><span class="ask-item">Buffer</span><span class="ask-amount">$100K</span><span class="ask-desc">Operational reserve</span></div>
+      </div>
+    </div>
+    <div class="slide-footer"><span class="brand">TurtleTalk</span><span>14 / 14</span></div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const progress = document.getElementById('progress');
+const hint = document.getElementById('nav-hint');
+let current = 0;
+const total = slides.length;
+
+function show(idx) {
+  if (idx < 0 || idx >= total) return;
+  slides[current].classList.remove('active');
+  current = idx;
+  slides[current].classList.add('active');
+  progress.style.width = ((current + 1) / total * 100) + '%';
+  if (current > 0) hint.style.opacity = '0';
+}
+
+show(0);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); show(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(current - 1); }
+  if (e.key === 'Home') { e.preventDefault(); show(0); }
+  if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+});
+
+document.addEventListener('click', e => {
+  const x = e.clientX / window.innerWidth;
+  if (x > 0.5) show(current + 1);
+  else show(current - 1);
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 40) dx < 0 ? show(current + 1) : show(current - 1);
+});
+</script>
+</body>
+</html>
